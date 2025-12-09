@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selector de Letras</title>
+    <title>Selector Aleatorio</title>
     <style>
         * {
             margin: 0;
@@ -29,6 +29,7 @@
             border-radius: 20px;
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            min-width: 400px;
         }
 
         h1 {
@@ -36,6 +37,44 @@
             font-size: 2.5rem;
             margin-bottom: 2rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Menú Principal */
+        .menu-principal {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .opcion-menu {
+            background: linear-gradient(135deg, #96f88f, #1d6a2478);
+            color: white;
+            border: none;
+            padding: 1.5rem 2rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(2, 255, 40, 0.5);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .opcion-menu:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(135, 226, 159, 0.7);
+        }
+
+        .opcion-menu:active {
+            transform: translateY(0);
+        }
+
+        /* Pantalla de Selección */
+        .pantalla-seleccion {
+            display: none;
         }
 
         .display-letra {
@@ -59,17 +98,9 @@
             transition: all 0.3s ease;
         }
 
-        .letra-actual.girar {
-            animation: girar 0.5s ease-in-out;
-        }
-
-        @keyframes girar {
-            0%, 100% {
-                transform: rotateY(0deg) scale(1);
-            }
-            50% {
-                transform: rotateY(180deg) scale(1.2);
-            }
+        .bandera-actual {
+            font-size: 8rem;
+            transition: all 0.3s ease;
         }
 
         .seleccionando {
@@ -78,11 +109,9 @@
 
         @keyframes cambioRapido {
             0%, 100% {
-                color: #f82408;
                 transform: scale(1);
             }
             50% {
-                color: #e2655f;
                 transform: scale(1.1);
             }
         }
@@ -117,6 +146,7 @@
             box-shadow: 0 5px 20px rgba(2, 255, 40, 0.968);
             transition: all 0.3s ease;
             text-transform: uppercase;
+            margin: 0.5rem;
         }
 
         .boton:hover {
@@ -132,6 +162,16 @@
             background: #ccc;
             cursor: not-allowed;
             box-shadow: none;
+        }
+
+        .boton-volver {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+            margin-top: 1rem;
+        }
+
+        .boton-volver:hover {
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
         }
 
         .particulas {
@@ -156,34 +196,144 @@
                 opacity: 0;
             }
         }
+
+        .mostrar {
+            display: block !important;
+        }
+
+        .ocultar {
+            display: none !important;
+        }
+
+        .nombre-pais {
+            color: white;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .bandera-actual img {
+            width: 150px;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
     </style>
 </head>
 <body>
     <div class="contenedor">
-        <h1>🎲 Selector de Letras</h1>
-        
-        <div class="display-letra">
-            <div class="letra-actual" id="letraDisplay">?</div>
-            <div class="particulas" id="particulas"></div>
+        <!-- Menú Principal -->
+        <div id="menuPrincipal" class="menu-principal">
+            <h1>🎯 Selector Aleatorio</h1>
+            <button class="opcion-menu" onclick="irALetras()">
+                <span>🔤</span>
+                <span>Letras del Abecedario</span>
+            </button>
+            <button class="opcion-menu" onclick="irABanderas()">
+                <span>🌍</span>
+                <span>Banderas de Países</span>
+            </button>
         </div>
-        
-        <button class="boton" id="botonSeleccionar" onclick="seleccionarLetra()">
-            Seleccionar Letra
-        </button>
+
+        <!-- Pantalla de Letras -->
+        <div id="pantallaLetras" class="pantalla-seleccion">
+            <h1>🔤 Selector de Letras</h1>
+            
+            <div class="display-letra">
+                <div class="letra-actual" id="letraDisplay">?</div>
+                <div class="particulas" id="particulasLetras"></div>
+            </div>
+            
+            <button class="boton" id="botonSeleccionarLetra" onclick="seleccionarLetra()">
+                Seleccionar Letra
+            </button>
+            <button class="boton boton-volver" onclick="volverMenu()">
+                ← Volver al Menú
+            </button>
+        </div>
+
+        <!-- Pantalla de Banderas -->
+        <div id="pantallaBanderas" class="pantalla-seleccion">
+            <h1>🌍 Selector de Banderas</h1>
+            
+            <div class="display-letra">
+                <div class="bandera-actual">
+                    <img id="banderaDisplay" src="banderas/ar.png" alt="Bandera">
+                </div>
+                <div class="particulas" id="particulasBanderas"></div>
+            </div>
+            
+            <!-- <div class="nombre-pais" id="nombrePais"></div> -->
+            
+            <button class="boton" id="botonSeleccionarBandera" onclick="seleccionarBandera()">
+                Seleccionar País
+            </button>
+            <button class="boton boton-volver" onclick="volverMenu()">
+                ← Volver al Menú
+            </button>
+        </div>
     </div>
 
     <script>
+        // Datos
         const abecedario = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-        const display = document.getElementById('letraDisplay');
-        const boton = document.getElementById('botonSeleccionar');
+        const paises = [
+            { codigo: 'AR', nombre: 'Argentina', imagen: 'banderas/ar.png' },
+            { codigo: 'BR', nombre: 'Brasil', imagen: 'banderas/br.png' },
+            { codigo: 'CL', nombre: 'Chile', imagen: 'banderas/cl.png' },
+            { codigo: 'CO', nombre: 'Colombia', imagen: 'banderas/co.png' },
+            { codigo: 'EC', nombre: 'Ecuador', imagen: 'banderas/ec.png' },
+            { codigo: 'PE', nombre: 'Perú', imagen: 'banderas/pe.png' },
+            { codigo: 'UY', nombre: 'Uruguay', imagen: 'banderas/uy.png' },
+            { codigo: 'VE', nombre: 'Venezuela', imagen: 'banderas/ve.png' },
+            { codigo: 'MX', nombre: 'México', imagen: 'banderas/mx.png' },
+            { codigo: 'ES', nombre: 'España', imagen: 'banderas/es.png' },
+            { codigo: 'US', nombre: 'Estados Unidos', imagen: 'banderas/us.png' },
+            { codigo: 'CA', nombre: 'Canadá', imagen: 'banderas/ca.png' },
+            { codigo: 'FR', nombre: 'Francia', imagen: 'banderas/fr.png' },
+            { codigo: 'IT', nombre: 'Italia', imagen: 'banderas/it.png' },
+            { codigo: 'DE', nombre: 'Alemania', imagen: 'banderas/de.png' },
+            { codigo: 'GB', nombre: 'Reino Unido', imagen: 'banderas/gb.png' },
+            { codigo: 'JP', nombre: 'Japón', imagen: 'banderas/jp.png' },
+            { codigo: 'CN', nombre: 'China', imagen: 'banderas/cn.png' },
+            { codigo: 'KR', nombre: 'Corea del Sur', imagen: 'banderas/kr.png' },
+            { codigo: 'IN', nombre: 'India', imagen: 'banderas/in.png' },
+            { codigo: 'AU', nombre: 'Australia', imagen: 'banderas/au.png' }
+        ];
+
         let seleccionando = false;
 
+        // Navegación
+        function irALetras() {
+            document.getElementById('menuPrincipal').classList.add('ocultar');
+            document.getElementById('pantallaLetras').classList.add('mostrar');
+        }
+
+        function irABanderas() {
+            document.getElementById('menuPrincipal').classList.add('ocultar');
+            document.getElementById('pantallaBanderas').classList.add('mostrar');
+        }
+
+        function volverMenu() {
+            document.getElementById('menuPrincipal').classList.remove('ocultar');
+            document.getElementById('pantallaLetras').classList.remove('mostrar');
+            document.getElementById('pantallaBanderas').classList.remove('mostrar');
+            
+            // Reset displays
+            document.getElementById('letraDisplay').textContent = '?';
+            document.getElementById('banderaDisplay').textContent = '🌎';
+            document.getElementById('nombrePais').textContent = '';
+        }
+
+        // Funciones de Letras
         function getLetraAleatoria() {
             return abecedario[Math.floor(Math.random() * abecedario.length)];
         }
 
-        function crearParticulas() {
-            const contenedor = document.getElementById('particulas');
+        function crearParticulas(contenedorId) {
+            const contenedor = document.getElementById(contenedorId);
             contenedor.innerHTML = '';
             
             for (let i = 0; i < 20; i++) {
@@ -202,6 +352,9 @@
         function seleccionarLetra() {
             if (seleccionando) return;
             
+            const display = document.getElementById('letraDisplay');
+            const boton = document.getElementById('botonSeleccionarLetra');
+            
             seleccionando = true;
             boton.disabled = true;
             display.classList.remove('resultado');
@@ -216,7 +369,7 @@
                     clearInterval(intervalo);
                     display.classList.remove('seleccionando');
                     display.classList.add('resultado');
-                    crearParticulas();
+                    crearParticulas('particulasLetras');
                     
                     setTimeout(() => {
                         seleccionando = false;
@@ -226,6 +379,48 @@
                 }
             }, 50);
         }
+
+        // Funciones de Banderas
+        function getPaisAleatorio() {
+            return paises[Math.floor(Math.random() * paises.length)];
+        }
+
+        function seleccionarBandera() {
+            if (seleccionando) return;
+            
+            const display = document.getElementById('banderaDisplay');
+            const nombreDisplay = document.getElementById('nombrePais');
+            const boton = document.getElementById('botonSeleccionarBandera');
+            
+            seleccionando = true;
+            boton.disabled = true;
+            display.classList.remove('resultado');
+            display.classList.add('seleccionando');
+            
+            let contador = 0;
+            const intervalo = setInterval(() => {
+                const paisTemp = getPaisAleatorio();
+                display.src = paisTemp.imagen;
+                contador++;
+                
+                if (contador >= 20) {
+                    clearInterval(intervalo);
+                    const paisFinal = getPaisAleatorio();
+                    display.src = paisFinal.imagen;
+                    
+                    display.classList.remove('seleccionando');
+                    display.classList.add('resultado');
+                    crearParticulas('particulasBanderas');
+                    
+                    setTimeout(() => {
+                        seleccionando = false;
+                        boton.disabled = false;
+                        display.classList.remove('resultado');
+                    }, 1000);
+                }
+            }, 50);
+        }
+
     </script>
 </body>
 </html>
