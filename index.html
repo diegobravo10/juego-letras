@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selector de Letras</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6ab0f1 0%, #023777 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .contenedor {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .display-letra {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letra-actual {
+            font-size: 6rem;
+            font-weight: bold;
+            color: #fd0101;
+            transition: all 0.3s ease;
+        }
+
+        .letra-actual.girar {
+            animation: girar 0.5s ease-in-out;
+        }
+
+        @keyframes girar {
+            0%, 100% {
+                transform: rotateY(0deg) scale(1);
+            }
+            50% {
+                transform: rotateY(180deg) scale(1.2);
+            }
+        }
+
+        .seleccionando {
+            animation: cambioRapido 0.1s infinite;
+        }
+
+        @keyframes cambioRapido {
+            0%, 100% {
+                color: #f82408;
+                transform: scale(1);
+            }
+            50% {
+                color: #e2655f;
+                transform: scale(1.1);
+            }
+        }
+
+        .resultado {
+            animation: resultado 0.6s ease-out;
+        }
+
+        @keyframes resultado {
+            0% {
+                transform: scale(0.5) rotate(-180deg);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.2) rotate(10deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .boton {
+            background: linear-gradient(135deg, #96f88f, #1d6a2478);
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(2, 255, 40, 0.968);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .boton:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(135, 226, 159, 0.6);
+        }
+
+        .boton:active {
+            transform: translateY(0);
+        }
+
+        .boton:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .particulas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particula {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #c43a03;
+            border-radius: 50%;
+            animation: explosion 1s ease-out forwards;
+        }
+
+        @keyframes explosion {
+            to {
+                transform: translate(var(--x), var(--y)) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <h1>🎲 Selector de Letras</h1>
+        
+        <div class="display-letra">
+            <div class="letra-actual" id="letraDisplay">?</div>
+            <div class="particulas" id="particulas"></div>
+        </div>
+        
+        <button class="boton" id="botonSeleccionar" onclick="seleccionarLetra()">
+            Seleccionar Letra
+        </button>
+    </div>
+
+    <script>
+        const abecedario = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        const display = document.getElementById('letraDisplay');
+        const boton = document.getElementById('botonSeleccionar');
+        let seleccionando = false;
+
+        function getLetraAleatoria() {
+            return abecedario[Math.floor(Math.random() * abecedario.length)];
+        }
+
+        function crearParticulas() {
+            const contenedor = document.getElementById('particulas');
+            contenedor.innerHTML = '';
+            
+            for (let i = 0; i < 20; i++) {
+                const particula = document.createElement('div');
+                particula.className = 'particula';
+                const angulo = (Math.PI * 2 * i) / 20;
+                const distancia = 100 + Math.random() * 50;
+                particula.style.setProperty('--x', Math.cos(angulo) * distancia + 'px');
+                particula.style.setProperty('--y', Math.sin(angulo) * distancia + 'px');
+                particula.style.left = '50%';
+                particula.style.top = '50%';
+                contenedor.appendChild(particula);
+            }
+        }
+
+        function seleccionarLetra() {
+            if (seleccionando) return;
+            
+            seleccionando = true;
+            boton.disabled = true;
+            display.classList.remove('resultado');
+            display.classList.add('seleccionando');
+            
+            let contador = 0;
+            const intervalo = setInterval(() => {
+                display.textContent = getLetraAleatoria();
+                contador++;
+                
+                if (contador >= 20) {
+                    clearInterval(intervalo);
+                    display.classList.remove('seleccionando');
+                    display.classList.add('resultado');
+                    crearParticulas();
+                    
+                    setTimeout(() => {
+                        seleccionando = false;
+                        boton.disabled = false;
+                        display.classList.remove('resultado');
+                    }, 1000);
+                }
+            }, 50);
+        }
+    </script>
+</body>
+</html>
