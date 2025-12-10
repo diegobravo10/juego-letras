@@ -1,0 +1,340 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #6ab0f1 0%, #023777 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+.contenedor {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 3rem;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    min-width: 400px;
+    max-width: 600px;
+}
+
+h1 {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Menú Principal */
+.menu-principal {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.opcion-menu {
+    background: linear-gradient(135deg, #96f88f, #1d6a2478);
+    color: white;
+    border: none;
+    padding: 1.5rem 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(2, 255, 40, 0.5);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.opcion-menu:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(135, 226, 159, 0.7);
+}
+
+.opcion-menu:active {
+    transform: translateY(0);
+}
+
+/* Pantalla de Selección */
+.pantalla-seleccion {
+    display: none;
+}
+
+.display-letra {
+    width: 200px;
+    height: 200px;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.letra-actual {
+    font-size: 6rem;
+    font-weight: bold;
+    color: #fd0101;
+    transition: all 0.3s ease;
+}
+
+.bandera-actual {
+    font-size: 8rem;
+    transition: all 0.3s ease;
+}
+
+.seleccionando {
+    animation: cambioRapido 0.1s infinite;
+}
+
+@keyframes cambioRapido {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.resultado {
+    animation: resultado 0.6s ease-out;
+}
+
+@keyframes resultado {
+    0% {
+        transform: scale(0.5) rotate(-180deg);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.2) rotate(10deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.boton {
+    background: linear-gradient(135deg, #96f88f, #1d6a2478);
+    color: white;
+    border: none;
+    padding: 1.2rem 3rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(2, 255, 40, 0.968);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    margin: 0.5rem;
+}
+
+.boton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(135, 226, 159, 0.6);
+}
+
+.boton:active {
+    transform: translateY(0);
+}
+
+.boton:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.boton-volver {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+    box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+    margin-top: 1rem;
+}
+
+.boton-volver:hover {
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+}
+
+.particulas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.particula {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #c43a03;
+    border-radius: 50%;
+    animation: explosion 1s ease-out forwards;
+}
+
+@keyframes explosion {
+    to {
+        transform: translate(var(--x), var(--y)) scale(0);
+        opacity: 0;
+    }
+}
+
+.mostrar {
+    display: block !important;
+}
+
+.ocultar {
+    display: none !important;
+}
+
+.nombre-pais {
+    color: white;
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.bandera-actual img {
+    width: 150px;
+    height: auto;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+/* Estilos para Adivinar la Bandera */
+.puntuacion {
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.puntuacion strong {
+    color: #96f88f;
+    font-size: 2rem;
+}
+
+.opciones-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.opcion-respuesta {
+    background: rgba(255, 255, 255, 0.9);
+    color: #023777;
+    border: 3px solid transparent;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.opcion-respuesta:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: white;
+}
+
+.opcion-respuesta:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.opcion-correcta {
+    background: #4CAF50 !important;
+    color: white !important;
+    border-color: #2e7d32 !important;
+    animation: pulsoVerde 0.5s ease;
+}
+
+.opcion-incorrecta {
+    background: #f44336 !important;
+    color: white !important;
+    border-color: #c62828 !important;
+    animation: agitar 0.5s ease;
+}
+
+@keyframes pulsoVerde {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes agitar {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+.resultado-mensaje {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    min-height: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.boton-siguiente {
+    background: linear-gradient(135deg, #4CAF50, #2e7d32);
+    box-shadow: 0 5px 20px rgba(76, 175, 80, 0.5);
+}
+
+.boton-siguiente:hover {
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.7);
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+    .contenedor {
+        min-width: auto;
+        width: 100%;
+        padding: 2rem 1.5rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .opcion-menu {
+        font-size: 1.2rem;
+        padding: 1.2rem 1.5rem;
+    }
+
+    .display-letra {
+        width: 180px;
+        height: 180px;
+    }
+
+    .bandera-actual img {
+        width: 120px;
+    }
+}
